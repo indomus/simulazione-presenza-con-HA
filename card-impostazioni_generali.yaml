@@ -1,0 +1,7 @@
+entities:
+  - entity: input_boolean.simulations_automations_general_presence
+  - entity: input_select.simulations_automations_preset_presence
+  - entity: binary_sensor.simulations_automations_preset_status_presence
+show_header_toggle: false
+title: Impostazioni Generali
+type: entities

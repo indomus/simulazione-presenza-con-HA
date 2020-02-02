@@ -1,0 +1,1022 @@
+# Simulations Automations
+
+# Inputs
+input_boolean:
+  # Presenza
+  # Generico
+  simulations_automations_general_presence:
+    name: 'Simulazione Presenza'
+    icon: mdi:human-handsdown
+  # Fuori Casa
+  # Generico
+  simulations_automations_alarm_away_presence:
+    name: 'Valutazione Antifurto'
+    icon: mdi:lock-question
+  simulations_automations_covers_away_presence:
+    name: 'Tapparelle Casuali'
+    icon: mdi:window-shutter-alert
+  simulations_automations_lights_away_presence:
+    name: 'Luci Casuali'
+    icon: mdi:lightbulb-multiple-outline
+  simulations_automations_repeat_away_presence:
+    name: 'Ripetizioni Casuali'
+    icon: mdi:repeat
+  # Giorno
+  simulations_automations_start_day_check_away_presence:
+    name: 'Simulazione Giorno [Verifica Inizio]'
+    icon: mdi:checkbox-marked-outline
+  # Sera
+  simulations_automations_start_evening_check_away_presence:
+    name: 'Simulazione Sera [Verifica Inizio]'
+    icon: mdi:checkbox-marked-outline
+  # Notte
+  simulations_automations_start_night_check_away_presence:
+    name: 'Simulazione Notte [Verifica Inizio]'
+    icon: mdi:checkbox-marked-outline
+  # -------------------------------------------------------------------------------------------------------------------
+
+input_select:
+  # Presenza
+  # Generico
+  simulations_automations_preset_presence:
+    name: 'Modello Simulazione'
+    icon: mdi:home-edit-outline
+    options:
+      - 'Lavoro'
+      - 'Vacanza'
+      - 'Notturno'
+      - 'Generico'
+  # Fuori Casa
+  # Generico
+  simulations_automations_base_away_presence:
+    name: 'Base Elementi Casuali'
+    icon: mdi:theme-light-dark
+    options:
+      - 'Ora'
+      - 'Sole'
+  # -------------------------------------------------------------------------------------------------------------------
+
+input_text:
+  # Presenza
+  # Fuori Casa
+  # Generico
+  simulations_automations_last_trigger_time_away_presence:
+    name: 'Ultima Simulazione [Ora]'
+    icon: mdi:clock-outline
+    initial: 'Non Disponibile'
+    mode: 'text'
+  simulations_automations_last_trigger_date_away_presence:
+    name: 'Ultima Simulazione [Data]'
+    icon: mdi:calendar
+    initial: 'Non Disponibile'
+    mode: 'text'
+  simulations_automations_last_trigger_time_slot_away_presence:
+    name: 'Ultima Simulazione [Fascia Oraria]'
+    icon: mdi:calendar-clock
+    initial: 'Non Disponibile'
+    mode: 'text'
+  simulations_automations_last_trigger_type_away_presence:
+    name: 'Ultima Simulazione [Tipologia]'
+    icon: mdi:format-list-bulleted-type
+    initial: 'Non Disponibile'
+    mode: 'text'
+  # -------------------------------------------------------------------------------------------------------------------
+
+input_datetime:
+  # Presenza
+  # Fuori Casa
+  # Generico
+  simulations_automations_start_day_end_night_away_presence:
+    name: 'Inizio Giorno / Termine Notte'
+    icon: mdi:weather-sunny
+    has_time: true
+  simulations_automations_start_evening_end_day_away_presence:
+    name: 'Inizio Sera / Termine Giorno'
+    icon: mdi:weather-sunset
+    has_time: true
+  simulations_automations_start_night_end_evening_away_presence:
+    name: 'Inizio Notte / Termine Sera'
+    icon: mdi:weather-night
+    has_time: true
+  # -------------------------------------------------------------------------------------------------------------------
+
+# Switches
+switch:
+  # Presenza
+  # Generico
+  - platform: template
+    switches:
+      simulations_automations_general_presence:
+        friendly_name: 'Simulazione Presenza'
+        value_template: '{{ is_state("input_boolean.simulations_automations_general_presence","on") }}'
+        icon_template: mdi:human-handsdown
+        turn_on:
+          service: input_boolean.turn_on
+          entity_id: input_boolean.simulations_automations_general_presence
+        turn_off:
+          service: input_boolean.turn_off
+          entity_id: input_boolean.simulations_automations_general_presence
+  # -------------------------------------------------------------------------------------------------------------------
+
+# Binary Sensors
+binary_sensor:
+  # Presenza
+  # Generico
+  - platform: template
+    sensors:
+      simulations_automations_preset_status_presence:
+        friendly_name: 'Stato Modello'
+        value_template: >-
+          {% if is_state("input_select.simulations_automations_preset_presence", "Lavoro") %}
+            {% if is_state("input_boolean.simulations_automations_alarm_away_presence", "on") %}
+              {% if is_state("alarm_control_panel.impianto_sicurezza", "armed_away") %}
+                true
+              {% elif is_state("alarm_control_panel.impianto_sicurezza", "off") %}
+                false
+              {% else %}
+                false
+              {% endif %}
+            {% elif is_state("input_boolean.simulations_automations_alarm_away_presence", "off") %}
+              true
+            {% else %}
+              false
+            {% endif %}
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Vacanza") %}
+            {% if is_state("input_boolean.simulations_automations_alarm_away_presence", "on") %}
+              {% if is_state("alarm_control_panel.impianto_sicurezza", "armed_away") %}
+                true
+              {% elif is_state("alarm_control_panel.impianto_sicurezza", "disarmed") %}
+                false
+              {% else %}
+                false
+              {% endif %}
+            {% elif is_state("input_boolean.simulations_automations_alarm_away_presence", "off") %}
+              true
+            {% else %}
+              false
+            {% endif %}
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Notturno") %}
+            {% if is_state("input_boolean.simulations_automations_alarm_away_presence", "on") %}
+              {% if is_state("alarm_control_panel.impianto_sicurezza", "armed_away") %}
+                true
+              {% elif is_state("alarm_control_panel.impianto_sicurezza", "disarmed") %}
+                false
+              {% else %}
+                false
+              {% endif %}
+            {% elif is_state("input_boolean.simulations_automations_alarm_away_presence", "off") %}
+              true
+            {% else %}
+              false
+            {% endif %}
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Generico") %}
+            {% if is_state("input_boolean.simulations_automations_alarm_away_presence", "on") %}
+              {% if is_state("alarm_control_panel.impianto_sicurezza", "armed_away") %}
+                true
+              {% elif is_state("alarm_control_panel.impianto_sicurezza", "disarmed") %}
+                false
+              {% else %}
+                false
+              {% endif %}
+            {% elif is_state("input_boolean.simulations_automations_alarm_away_presence", "off") %}
+              true
+            {% else %}
+              false
+            {% endif %}
+          {% else %}
+            false
+          {% endif %}
+        icon_template: >-
+          {% if is_state("input_select.simulations_automations_preset_presence", "Lavoro") %}
+            mdi:briefcase-outline
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Vacanza") %}
+            mdi:beach
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Notturno") %}
+            mdi:weather-night
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Generico") %}
+            mdi:exit-run
+          {% else %}
+            mdi:pencil-box-outline
+          {% endif %}
+  # Fuori Casa
+  # Generico
+  # Stati
+  - platform: random
+    name: 'Stato Casuale 1 [Fuori Casa]'
+  # -------------------------------------------------------------------------------------------------------------------
+
+# Sensors
+sensor:
+  # Presenza
+  # Generico
+  - platform: template
+    sensors:
+     simulations_automations_preset_config_presence:
+        friendly_name: 'Configurazione Modello'
+        value_template: >-
+          {% if is_state("input_select.simulations_automations_preset_presence", "Lavoro") %}
+            1
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Vacanza") %}
+            2
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Notturno") %}
+            3
+          {% elif is_state("input_select.simulations_automations_preset_presence", "Generico") %}
+            4
+          {% else %}
+            0
+          {% endif %}
+        attribute_templates:
+          Giorno_Tapparelle: >-
+            {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+              Casuali
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+              Casuali
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+              Casuali
+            {% else %}
+              Non Attivo
+            {% endif %}
+          Giorno_Luci: >-
+            {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+              Casuali
+            {% else %}
+              Non Attivo
+            {% endif %}
+          Sera_Tapparelle: >-
+            {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+              Casuali
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+              Casuali
+            {% else %}
+              Non Attivo
+            {% endif %}
+          Sera_Luci: >-
+            {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+              Casuali
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+              Casuali
+            {% else %}
+              Non Attivo
+            {% endif %}
+          Notte_Tapparelle: >-
+            {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+              Chiusura
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+              Casuali
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+              Casuali
+            {% else %}
+              Non Attivo
+            {% endif %}
+          Notte_Luci: >-
+            {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+              Non Attivo
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+              Spegnimento
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+              Casuali
+            {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+              Casuali
+            {% else %}
+              Non Attivo
+            {% endif %}
+        icon_template: >-
+          {% if is_state("sensor.simulations_automations_preset_config_presence", "0") %}
+            mdi:numeric-0-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "1") %}
+            mdi:numeric-1-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "2") %}
+            mdi:numeric-2-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "3") %}
+            mdi:numeric-3-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "4") %}
+            mdi:numeric-4-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "5") %}
+            mdi:numeric-5-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "6") %}
+            mdi:numeric-6-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "7") %}
+            mdi:numeric-7-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "8") %}
+            mdi:numeric-8-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "9") %}
+            mdi:numeric-9-box-outline
+          {% elif is_state("sensor.simulations_automations_preset_config_presence", "10") %}
+            mdi:numeric-10-box-outline
+          {% else %}
+            mdi:file-excel-box-outline
+          {% endif %}
+  # Fuori Casa
+  # Generico
+  - platform: template
+    sensors:
+      simulations_automations_time_slot_away_presence:
+        friendly_name: 'Fascia Oraria'
+        value_template: >-
+          {% if is_state("input_select.simulations_automations_base_away_presence", "Ora") %}
+            {% set away_presence_time = now().strftime('%H:%M:%S') %}
+            {% if away_presence_time >= states("input_datetime.simulations_automations_start_day_end_night_away_presence") and away_presence_time < states("input_datetime.simulations_automations_start_evening_end_day_away_presence") %}
+              Giorno
+            {% elif away_presence_time >= states("input_datetime.simulations_automations_start_evening_end_day_away_presence") and away_presence_time < states("input_datetime.simulations_automations_start_night_end_evening_away_presence") %}
+              Sera
+            {% elif away_presence_time >= states("input_datetime.simulations_automations_start_night_end_evening_away_presence") or away_presence_time < states("input_datetime.simulations_automations_start_day_end_night_away_presence") %}
+              Notte
+            {% else %}
+              Errore
+            {% endif %}
+          {% elif is_state("input_select.simulations_automations_base_away_presence", "Sole") %}
+            {% if (as_timestamp(states.sun.sun.attributes.next_dusk)) - (as_timestamp(states.sun.sun.attributes.next_setting)) < 0 %}
+              Sera
+            {% elif (as_timestamp(states.sun.sun.attributes.next_rising)) - (as_timestamp(states.sun.sun.attributes.next_dawn)) < 0 %}
+              Notte
+            {% elif (states.sun.sun.attributes.elevation) < -5 %}
+              Notte
+            {% else %}
+              Giorno
+            {% endif %}
+          {% else %}
+            Errore
+          {% endif %}
+        icon_template: mdi:calendar-clock
+      simulations_automations_last_trigger_away_presence:
+        friendly_name: 'Ultima Simulazione'
+        value_template: '{{ states("input_text.simulations_automations_last_trigger_time_away_presence") }}'
+        attribute_templates:
+          Ora: '{{ states("input_text.simulations_automations_last_trigger_time_away_presence") }}'
+          Data: '{{ states("input_text.simulations_automations_last_trigger_date_away_presence") }}'
+          Fascia_Oraria: '{{ states("input_text.simulations_automations_last_trigger_time_slot_away_presence") }}'
+          Tipologia: '{{ states("input_text.simulations_automations_last_trigger_type_away_presence") }}'
+          Stato_Inizio: >-
+            {% if is_state("input_boolean.simulations_automations_start_day_check_away_presence", "on") %}
+              {% if is_state("input_boolean.simulations_automations_start_evening_check_away_presence", "on") or is_state("input_boolean.simulations_automations_start_night_check_away_presence", "on") %}
+                Errore
+              {% else %}
+                Giorno
+              {% endif %}
+            {% elif is_state("input_boolean.simulations_automations_start_evening_check_away_presence", "on") %}
+              {% if is_state("input_boolean.simulations_automations_start_day_check_away_presence", "on") or is_state("input_boolean.simulations_automations_start_night_check_away_presence", "on") %}
+                Errore
+              {% else %}
+                Sera
+              {% endif %}
+            {% elif is_state("input_boolean.simulations_automations_start_night_check_away_presence", "on") %}
+              {% if is_state("input_boolean.simulations_automations_start_day_check_away_presence", "on") or is_state("input_boolean.simulations_automations_start_evening_check_away_presence", "on") %}
+                Errore
+              {% else %}
+                Notte
+              {% endif %}
+            {% else %}
+              Non Attivo
+            {% endif %}
+        icon_template: mdi:clipboard-pulse
+  # Valori
+  - platform: random
+    name: 'Valore Casuale 1 [Fuori Casa]'
+    minimum: 0
+    maximum: 60
+  - platform: random
+    name: 'Valore Casuale 2 [Fuori Casa]'
+    minimum: 60
+    maximum: 100
+  - platform: random
+    name: 'Valore Casuale 3 [Fuori Casa]'
+    minimum: 0
+    maximum: 10
+  # Tempi
+  - platform: random
+    name: 'Tempo Casuale 1 [Fuori Casa]'
+    minimum: 1
+    maximum: 20
+  - platform: random
+    name: 'Tempo Casuale 2 [Fuori Casa]'
+    minimum: 20
+    maximum: 60
+  - platform: random
+    name: 'Tempo Casuale 3 [Fuori Casa]'
+    minimum: 60
+    maximum: 90
+  # -------------------------------------------------------------------------------------------------------------------
+
+# Automations
+automation:
+  # Presenza
+  # Generico
+  - alias: 'Simulations Automations - Presenza Aggiornamento Stato Modello Selezionato'
+    trigger:
+    - platform: time_pattern
+      hours: '/1'
+    - platform: homeassistant
+      event: start
+    - platform: state
+      entity_id:
+        - sensor.time
+        - input_select.simulations_automations_preset_away_presence
+    action:
+    - service: homeassistant.update_entity
+      entity_id:
+        - sensor.simulations_automations_preset_status_away_presence
+        - sensor.simulations_automations_preset_config_presence
+        - sensor.simulations_automations_last_trigger_away_presence
+  # Fuori Casa
+  # Generico
+  - alias: 'Simulations Automations - Presenza Fuori Casa Aggiornamento Fascia Oraria'
+    trigger:
+    - platform: state
+      entity_id:
+        - sensor.time
+        - input_datetime.simulations_automations_start_day_end_night_away_presence
+        - input_datetime.simulations_automations_start_evening_end_day_away_presence
+        - input_datetime.simulations_automations_start_night_end_evening_away_presence
+        - input_select.simulations_automations_base_away_presence
+    action:
+    - service: homeassistant.update_entity
+      entity_id:
+        - sensor.simulations_automations_time_slot_away_presence
+        - sensor.simulations_automations_last_trigger_away_presence
+  - alias: 'Simulations Automations - Presenza Fuori Casa Reset Stati'
+    trigger:
+    - platform: homeassistant
+      event: start
+    - platform: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      to: 'off'
+    action:
+    - service: input_boolean.turn_off
+      entity_id:
+        - input_boolean.simulations_automations_start_day_check_away_presence
+        - input_boolean.simulations_automations_start_evening_check_away_presence
+        - input_boolean.simulations_automations_start_night_check_away_presence
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: 'Non Disponibile'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: 'Non Disponibile'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Non Disponibile'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Non Disponibile'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  # Giorno
+  - alias: 'Simulations Automations - Presenza Fuori Casa Passaggio A Giorno'
+    trigger:
+    - platform: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      to: 'Giorno'
+    - platform: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.simulations_automations_preset_status_presence
+      state: 'on'
+    - condition: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      state: 'Giorno'
+    action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.simulations_automations_start_day_check_away_presence
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_1_fuori_casa") | int * 60 }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_start_day
+    - delay: '00:10:00'
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.simulations_automations_start_day_check_away_presence
+  - alias: 'Simulations Automations - Presenza Fuori Casa Durante Il Giorno'
+    trigger:
+    - platform: time_pattern
+      hours: '/2'
+    condition:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.simulations_automations_preset_status_presence
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.simulations_automations_repeat_away_presence
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.simulations_automations_start_day_check_away_presence
+      state: 'off'
+    - condition: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      state: 'Giorno'
+    action:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_during_day
+  # Sera
+  - alias: 'Simulations Automations - Presenza Fuori Casa Passaggio A Sera'
+    trigger:
+    - platform: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      to: 'Sera'
+    - platform: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.simulations_automations_preset_status_presence
+      state: 'on'
+    - condition: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      state: 'Sera'
+    action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.simulations_automations_start_evening_check_away_presence
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_1_fuori_casa") | int * 60 }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_start_evening
+    - delay: '00:10:00'
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.simulations_automations_start_evening_check_away_presence
+  - alias: 'Simulations Automations - Presenza Fuori Casa Durante La Sera'
+    trigger:
+    - platform: time_pattern
+      minutes: '/10'
+    condition:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.simulations_automations_preset_status_presence
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.simulations_automations_repeat_away_presence
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.simulations_automations_start_evening_check_away_presence
+      state: 'off'
+    - condition: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      state: 'Sera'
+    action:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_during_evening
+  # Notte
+  - alias: 'Simulations Automations - Presenza Fuori Casa Passaggio A Notte'
+    trigger:
+    - platform: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      to: 'Notte'
+    - platform: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.simulations_automations_preset_status_presence
+      state: 'on'
+    - condition: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      state: 'Notte'
+    action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.simulations_automations_start_night_check_away_presence
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_1_fuori_casa") | int * 60 }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_start_night
+    - delay: '00:10:00'
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.simulations_automations_start_night_check_away_presence
+  - alias: 'Simulations Automations - Presenza Fuori Casa Durante La Notte'
+    trigger:
+    - platform: time_pattern
+      hours: '/3'
+    condition:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_general_presence
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.simulations_automations_preset_status_presence
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.simulations_automations_repeat_away_presence
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.simulations_automations_start_night_check_away_presence
+      state: 'off'
+    - condition: state
+      entity_id: sensor.simulations_automations_time_slot_away_presence
+      state: 'Notte'
+    action:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_during_night
+  # -------------------------------------------------------------------------------------------------------------------
+
+# Scripts
+script:
+  # Presenza
+  # Fuori Casa
+  # Generico
+  # Stati
+  simulations_automations_away_presence_randomize_states:
+    sequence:
+    - service: homeassistant.update_entity
+      entity_id:
+        - binary_sensor.stato_casuale_1_fuori_casa
+  # Valori
+  simulations_automations_away_presence_randomize_values:
+    sequence:
+    - service: homeassistant.update_entity
+      entity_id:
+        - sensor.valore_casuale_1_fuori_casa
+        - sensor.valore_casuale_2_fuori_casa
+        - sensor.valore_casuale_3_fuori_casa
+  # Tempi
+  simulations_automations_away_presence_randomize_times:
+    sequence:
+    - service: homeassistant.update_entity
+      entity_id:
+       - sensor.tempo_casuale_1_fuori_casa
+       - sensor.tempo_casuale_2_fuori_casa
+       - sensor.tempo_casuale_3_fuori_casa
+  # Elementi
+  simulations_automations_away_presence_randomize_covers:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_3_fuori_casa") | int }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_values
+    - service: cover.set_cover_position
+      entity_id: cover.cucina
+      data_template:
+        position: >-
+          {% if is_state("sensor.simulations_automations_time_slot_away_presence", "Giorno") %}
+            {{ states("sensor.valore_casuale_2_fuori_casa") | int }}
+          {% elif is_state("sensor.simulations_automations_time_slot_away_presence", "Sera") %}
+            {{ states("sensor.valore_casuale_1_fuori_casa") | int }}
+          {% elif is_state("sensor.simulations_automations_time_slot_away_presence", "Notte") %}
+            {{ states("sensor.valore_casuale_3_fuori_casa") | int }}
+          {% else %}
+            0
+          {% endif %}
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_3_fuori_casa") | int }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_values
+    - service: cover.set_cover_position
+      entity_id: cover.soggiorno
+      data_template:
+        position: >-
+          {% if is_state("sensor.simulations_automations_time_slot_away_presence", "Giorno") %}
+            {{ states("sensor.valore_casuale_2_fuori_casa") | int }}
+          {% elif is_state("sensor.simulations_automations_time_slot_away_presence", "Sera") %}
+            {{ states("sensor.valore_casuale_1_fuori_casa") | int }}
+          {% elif is_state("sensor.simulations_automations_time_slot_away_presence", "Notte") %}
+            {{ states("sensor.valore_casuale_3_fuori_casa") | int }}
+          {% else %}
+            0
+          {% endif %}
+  simulations_automations_away_presence_randomize_lights:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_2_fuori_casa") | int }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_states
+    - service_template: >-
+        {% if is_state("binary_sensor.stato_casuale_1_fuori_casa", "on") %}
+          light.turn_on
+        {% else %}
+          light.turn_off
+        {% endif %}
+      entity_id: light.cucina
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_2_fuori_casa") | int }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_states
+    - service_template: >-
+        {% if is_state("binary_sensor.stato_casuale_1_fuori_casa", "on") %}
+          light.turn_on
+        {% else %}
+          light.turn_off
+        {% endif %}
+      entity_id: light.soggiorno_1
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_2_fuori_casa") | int }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_states
+    - service_template: >-
+        {% if is_state("binary_sensor.stato_casuale_1_fuori_casa", "on") %}
+          light.turn_on
+        {% else %}
+          light.turn_off
+        {% endif %}
+      entity_id: light.soggiorno_2
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_times
+    - delay: '{{ states("sensor.tempo_casuale_2_fuori_casa") | int }}'
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_randomize_states
+    - service_template: >-
+        {% if is_state("binary_sensor.stato_casuale_1_fuori_casa", "on") %}
+          light.turn_on
+        {% else %}
+          light.turn_off
+        {% endif %}
+      entity_id: light.camera
+  # Giorno
+  simulations_automations_away_presence_start_day:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_day_covers
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_day_lights
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: '{{ now().strftime("%H:%M:%S") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: '{{ now().strftime("%d/%m/%Y") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Giorno'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Inizio'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  simulations_automations_away_presence_during_day:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_day_covers
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_day_lights
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: '{{ now().strftime("%H:%M:%S") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: '{{ now().strftime("%d/%m/%Y") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Giorno'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Ripetizione'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  simulations_automations_away_presence_day_covers:
+    sequence:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_covers_away_presence
+      state: 'on'
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Giorno_Tapparelle') != 'Non Attivo' %}
+            {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Giorno_Tapparelle') == 'Casuali' %}
+              script.simulations_automations_away_presence_randomize_covers
+            {% elif state_attr('sensor.simulations_automations_preset_config_presence', 'Giorno_Tapparelle') == 'Chiusura' %}
+              script.scenario_all_covers_off
+            {% endif %}
+          {% endif %}
+  simulations_automations_away_presence_day_lights:
+    sequence:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_lights_away_presence
+      state: 'on'
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Giorno_Luci') != 'Non Attivo' %}
+            {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Giorno_Luci') == 'Casuali' %}
+              script.simulations_automations_away_presence_randomize_lights
+            {% elif state_attr('sensor.simulations_automations_preset_config_presence', 'Giorno_Luci') == 'Spegnimento' %}
+              script.scenario_all_lights_off
+            {% endif %}
+          {% endif %}
+  # Sera
+  simulations_automations_away_presence_start_evening:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_evening_covers
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_evening_lights
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: '{{ now().strftime("%H:%M:%S") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: '{{ now().strftime("%d/%m/%Y") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Sera'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Inizio'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  simulations_automations_away_presence_during_evening:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_evening_lights
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: '{{ now().strftime("%H:%M:%S") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: '{{ now().strftime("%d/%m/%Y") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Sera'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Ripetizione'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  simulations_automations_away_presence_evening_covers:
+    sequence:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_covers_away_presence
+      state: 'on'
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Sera_Tapparelle') != 'Non Attivo' %}
+            {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Sera_Tapparelle') == 'Casuali' %}
+              script.simulations_automations_away_presence_randomize_covers
+            {% elif state_attr('sensor.simulations_automations_preset_config_presence', 'Sera_Tapparelle') == 'Chiusura' %}
+              script.scenario_all_covers_off
+            {% endif %}
+          {% endif %}
+  simulations_automations_away_presence_evening_lights:
+    sequence:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_lights_away_presence
+      state: 'on'
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Sera_Luci') != 'Non Attivo' %}
+            {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Sera_Luci') == 'Casuali' %}
+              script.simulations_automations_away_presence_randomize_lights
+            {% elif state_attr('sensor.simulations_automations_preset_config_presence', 'Sera_Luci') == 'Spegnimento' %}
+              script.scenario_all_lights_off
+            {% endif %}
+          {% endif %}
+  # Notte
+  simulations_automations_away_presence_start_night:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_night_covers
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_night_lights
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: '{{ now().strftime("%H:%M:%S") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: '{{ now().strftime("%d/%m/%Y") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Notte'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Inizio'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  simulations_automations_away_presence_during_night:
+    sequence:
+    - service: script.turn_on
+      entity_id: script.simulations_automations_away_presence_night_lights
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_away_presence
+        value: '{{ now().strftime("%H:%M:%S") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_date_away_presence
+        value: '{{ now().strftime("%d/%m/%Y") }}'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_time_slot_away_presence
+        value: 'Notte'
+    - service: input_text.set_value
+      data_template:
+        entity_id: input_text.simulations_automations_last_trigger_type_away_presence
+        value: 'Ripetizione'
+    - service: homeassistant.update_entity
+      entity_id: sensor.simulations_automations_last_trigger_away_presence
+  simulations_automations_away_presence_night_covers:
+    sequence:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_covers_away_presence
+      state: 'on'
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Notte_Tapparelle') != 'Non Attivo' %}
+            {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Notte_Tapparelle') == 'Casuali' %}
+              script.simulations_automations_away_presence_randomize_covers
+            {% elif state_attr('sensor.simulations_automations_preset_config_presence', 'Notte_Tapparelle') == 'Chiusura' %}
+              script.scenario_all_covers_off
+            {% endif %}
+          {% endif %}
+  simulations_automations_away_presence_night_lights:
+    sequence:
+    - condition: state
+      entity_id: input_boolean.simulations_automations_lights_away_presence
+      state: 'on'
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+          {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Notte_Luci') != 'Non Attivo' %}
+            {% if state_attr('sensor.simulations_automations_preset_config_presence', 'Notte_Luci') == 'Casuali' %}
+              script.simulations_automations_away_presence_randomize_lights
+            {% elif state_attr('sensor.simulations_automations_preset_config_presence', 'Notte_Luci') == 'Spegnimento' %}
+              script.scenario_all_lights_off
+            {% endif %}
+          {% endif %}
+
+  scenario_all_covers_off:
+    sequence:
+    - service: cover.set_cover_position
+      entity_id: all
+      data:
+        position: 0
+
+  scenario_all_lights_off:
+    sequence:
+    - service: light.turn_off
+      entity_id: all
+  # -------------------------------------------------------------------------------------------------------------------

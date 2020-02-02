@@ -1,0 +1,110 @@
+# Simulations Automations
+# Binary Sensors
+# Presenza
+# Fuori Casa
+# Stati
+binary_sensor.stato_casuale_1_fuori_casa:
+  hidden: false
+  icon: mdi:power-cycle
+# Sensors
+# Presenza
+# Fuori Casa
+# Valori
+sensor.valore_casuale_1_fuori_casa:
+  hidden: false
+  icon: mdi:numeric
+sensor.valore_casuale_2_fuori_casa:
+  hidden: false
+  icon: mdi:numeric
+sensor.valore_casuale_3_fuori_casa:
+  hidden: false
+  icon: mdi:numeric
+# Tempi
+sensor.tempo_casuale_1_fuori_casa:
+  hidden: false
+  icon: mdi:clock-digital
+sensor.tempo_casuale_2_fuori_casa:
+  hidden: false
+  icon: mdi:clock-digital
+sensor.tempo_casuale_3_fuori_casa:
+  hidden: false
+  icon: mdi:clock-digital
+# Scripts
+# Presenza
+# Fuori Casa
+# Generico
+# Stati
+script.simulations_automations_away_presence_randomize_states:
+  hidden: false
+  friendly_name: 'Generazione Casuali [Stati]'
+  icon: mdi:dice-1
+# Valori
+script.simulations_automations_away_presence_randomize_values:
+  hidden: false
+  friendly_name: 'Generazione Casuali [Valori]'
+  icon: mdi:dice-2
+# Tempi
+script.simulations_automations_away_presence_randomize_times:
+  hidden: false
+  friendly_name: 'Generazione Casuali [Tempi]'
+  icon: mdi:dice-3
+# Elementi
+script.simulations_automations_away_presence_randomize_covers:
+  hidden: false
+  friendly_name: 'Generazione Casuali [Tapparelle]'
+  icon: mdi:window-shutter-alert
+script.simulations_automations_away_presence_randomize_lights:
+  hidden: false
+  friendly_name: 'Generazione Casuali [Luci]'
+  icon: mdi:lightbulb-multiple-outline
+# Giorno
+script.simulations_automations_away_presence_start_day:
+  hidden: false
+  friendly_name: 'Simulazione Giorno [Inizio]'
+  icon: mdi:weather-sunny
+script.simulations_automations_away_presence_during_day:
+  hidden: false
+  friendly_name: 'Simulazione Giorno [Ripetizione]'
+  icon: mdi:weather-sunny
+script.simulations_automations_away_presence_day_covers:
+  hidden: false
+  friendly_name: 'Simulazione Giorno [Tapparelle]'
+  icon: mdi:window-shutter
+script.simulations_automations_away_presence_day_lights:
+  hidden: false
+  friendly_name: 'Simulazione Giorno [Luci]'
+  icon: mdi:lightbulb-on-outline
+# Sera
+script.simulations_automations_away_presence_start_evening:
+  hidden: false
+  friendly_name: 'Simulazione Sera [Inizio]'
+  icon: mdi:weather-sunset
+script.simulations_automations_away_presence_during_evening:
+  hidden: false
+  friendly_name: 'Simulazione Sera [Ripetizione]'
+  icon: mdi:weather-sunset
+script.simulations_automations_away_presence_evening_covers:
+  hidden: false
+  friendly_name: 'Simulazione Sera [Tapparelle]'
+  icon: mdi:window-shutter
+script.simulations_automations_away_presence_evening_lights:
+  hidden: false
+  friendly_name: 'Simulazione Sera [Luci]'
+  icon: mdi:lightbulb-on-outline
+# Notte
+script.simulations_automations_away_presence_start_night:
+  hidden: false
+  friendly_name: 'Simulazione Notte [Inizio]'
+  icon: mdi:weather-night
+script.simulations_automations_away_presence_during_night:
+  hidden: false
+  friendly_name: 'Simulazione Notte [Ripetizione]'
+  icon: mdi:weather-night
+script.simulations_automations_away_presence_night_covers:
+  hidden: false
+  friendly_name: 'Simulazione Notte [Tapparelle]'
+  icon: mdi:window-shutter
+script.simulations_automations_away_presence_night_lights:
+  hidden: false
+  friendly_name: 'Simulazione Notte [Luci]'
+  icon: mdi:lightbulb-on-outline

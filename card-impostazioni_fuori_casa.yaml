@@ -1,0 +1,14 @@
+entities:
+  - entity: input_boolean.simulations_automations_covers_away_presence
+  - entity: input_boolean.simulations_automations_lights_away_presence
+  - entity: input_boolean.simulations_automations_repeat_away_presence
+  - entity: input_boolean.simulations_automations_alarm_away_presence
+  - entity: input_select.simulations_automations_base_away_presence
+  - entity: input_datetime.simulations_automations_start_day_end_night_away_presence
+  - entity: input_datetime.simulations_automations_start_evening_end_day_away_presence
+  - entity: input_datetime.simulations_automations_start_night_end_evening_away_presence
+  - entity: sensor.simulations_automations_time_slot_away_presence
+  - entity: sensor.simulations_automations_last_trigger_away_presence
+show_header_toggle: false
+title: Impostazioni Fuori Casa
+type: entities

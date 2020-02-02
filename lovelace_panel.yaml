@@ -1,0 +1,75 @@
+  - badges: []
+    cards:
+      - entities:
+          - entity: input_boolean.simulations_automations_general_presence
+          - entity: input_select.simulations_automations_preset_presence
+          - entity: binary_sensor.simulations_automations_preset_status_presence
+        show_header_toggle: false
+        title: Impostazioni Generali
+        type: entities
+      - entities:
+          - entity: input_boolean.simulations_automations_covers_away_presence
+          - entity: input_boolean.simulations_automations_lights_away_presence
+          - entity: input_boolean.simulations_automations_repeat_away_presence
+          - entity: input_boolean.simulations_automations_alarm_away_presence
+          - entity: input_select.simulations_automations_base_away_presence
+          - entity: >-
+              input_datetime.simulations_automations_start_day_end_night_away_presence
+          - entity: >-
+              input_datetime.simulations_automations_start_evening_end_day_away_presence
+          - entity: >-
+              input_datetime.simulations_automations_start_night_end_evening_away_presence
+          - entity: sensor.simulations_automations_time_slot_away_presence
+          - entity: sensor.simulations_automations_last_trigger_away_presence
+        show_header_toggle: false
+        title: Impostazioni Fuori Casa
+        type: entities
+      - entities:
+          - entity: sensor.simulations_automations_preset_config_presence
+          - entity: automation.simulations_automations_presenza_aggiornamento_stato_modello_selezionato
+          - entity: automation.simulations_automations_presenza_fuori_casa_aggiornamento_fascia_oraria
+          - entity: automation.simulations_automations_presenza_fuori_casa_reset_stati
+          - entity: automation.simulations_automations_presenza_fuori_casa_passaggio_a_giorno
+          - entity: automation.simulations_automations_presenza_fuori_casa_durante_il_giorno
+          - entity: automation.simulations_automations_presenza_fuori_casa_passaggio_a_sera
+          - entity: automation.simulations_automations_presenza_fuori_casa_durante_la_sera
+          - entity: automation.simulations_automations_presenza_fuori_casa_passaggio_a_notte
+          - entity: automation.simulations_automations_presenza_fuori_casa_durante_la_notte
+          - entity: switch.simulations_automations_general_presence
+          - entity: script.simulations_automations_away_presence_randomize_states
+          - entity: script.simulations_automations_away_presence_randomize_values
+          - entity: script.simulations_automations_away_presence_randomize_times
+          - entity: script.simulations_automations_away_presence_randomize_covers
+          - entity: script.simulations_automations_away_presence_randomize_lights
+          - entity: input_boolean.simulations_automations_start_day_check_away_presence
+          - entity: script.simulations_automations_away_presence_start_day
+          - entity: script.simulations_automations_away_presence_during_day
+          - entity: script.simulations_automations_away_presence_day_covers
+          - entity: script.simulations_automations_away_presence_day_lights
+          - entity: input_boolean.simulations_automations_start_evening_check_away_presence
+          - entity: script.simulations_automations_away_presence_start_evening
+          - entity: script.simulations_automations_away_presence_during_evening
+          - entity: script.simulations_automations_away_presence_evening_covers
+          - entity: script.simulations_automations_away_presence_evening_lights
+          - entity: input_boolean.simulations_automations_start_night_check_away_presence
+          - entity: script.simulations_automations_away_presence_start_night
+          - entity: script.simulations_automations_away_presence_during_night
+          - entity: script.simulations_automations_away_presence_night_covers
+          - entity: script.simulations_automations_away_presence_night_lights
+          - entity: binary_sensor.stato_casuale_1_fuori_casa
+          - entity: sensor.valore_casuale_1_fuori_casa
+          - entity: sensor.valore_casuale_2_fuori_casa
+          - entity: sensor.valore_casuale_3_fuori_casa
+          - entity: sensor.tempo_casuale_1_fuori_casa
+          - entity: sensor.tempo_casuale_2_fuori_casa
+          - entity: sensor.tempo_casuale_3_fuori_casa
+          - entity: input_text.simulations_automations_last_trigger_time_away_presence
+          - entity: input_text.simulations_automations_last_trigger_date_away_presence
+          - entity: input_text.simulations_automations_last_trigger_time_slot_away_presence
+          - entity: input_text.simulations_automations_last_trigger_type_away_presence
+        show_header_toggle: false
+        title: Cruscotto
+        type: entities
+    icon: 'mdi:human-handsdown'
+    path: simulations_automations
+    title: Simulazioni
