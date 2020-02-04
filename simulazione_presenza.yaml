@@ -444,7 +444,7 @@ automation:
     action:
     - service: homeassistant.update_entity
       entity_id:
-        - sensor.simulations_automations_preset_status_away_presence
+        - binary_sensor.simulations_automations_preset_status_presence
         - sensor.simulations_automations_preset_config_presence
         - sensor.simulations_automations_last_trigger_away_presence
   # Fuori Casa
